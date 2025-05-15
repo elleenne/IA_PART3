@@ -34,7 +34,7 @@ def load_model():
                    learning_rate=0.01, epoch=100)
     return nn
 
-def generate_perturbed_instances(instance, n_perturbations=250, noise_level=0.1):
+def generate_perturbed_instances(instance, n_perturbations=250, noise_level=0.2):
     """
     Generate perturbed versions of an instance by adding random noise.
     
@@ -85,19 +85,19 @@ def save_perturbed_data(instance, perturbed_instances, predictions, features, in
         instance_id: ID of the original instance
     """
     # Create results directory if it doesn't exist
-    os.makedirs('results/perturbed_instances', exist_ok=True)
+    os.makedirs('results/perturbed_instances_20pct', exist_ok=True)
     
     # Save perturbed instances
     perturbed_df = pd.DataFrame(perturbed_instances, columns=features)
-    perturbed_df.to_csv(f'results/perturbed_instances/instance_{instance_id}_perturbed.csv', index=False)
+    perturbed_df.to_csv(f'results/perturbed_instances_20pct/instance_{instance_id}_perturbed.csv', index=False)
     
     # Save predictions
     predictions_df = pd.DataFrame(predictions, columns=[f'prob_class_{i}' for i in range(3)])
-    predictions_df.to_csv(f'results/perturbed_instances/instance_{instance_id}_predictions.csv', index=False)
+    predictions_df.to_csv(f'results/perturbed_instances_20pct/instance_{instance_id}_predictions.csv', index=False)
     
     # Save original instance
     original_df = pd.DataFrame([instance], columns=features)
-    original_df.to_csv(f'results/perturbed_instances/instance_{instance_id}_original.csv', index=False)
+    original_df.to_csv(f'results/perturbed_instances_20pct/instance_{instance_id}_original.csv', index=False)
 
 def visualize_perturbations(instance, perturbed_instances, predictions, features, instance_id):
     """
@@ -132,7 +132,7 @@ def visualize_perturbations(instance, perturbed_instances, predictions, features
         ax.legend()
     
     plt.tight_layout()
-    plt.savefig(f'results/perturbed_instances/instance_{instance_id}_distributions.png')
+    plt.savefig(f'results/perturbed_instances_20pct/instance_{instance_id}_distributions.png')
     plt.close()
     
     # Plot prediction distributions
@@ -143,7 +143,7 @@ def visualize_perturbations(instance, perturbed_instances, predictions, features
     plt.xlabel('Probability')
     plt.ylabel('Count')
     plt.legend()
-    plt.savefig(f'results/perturbed_instances/instance_{instance_id}_predictions.png')
+    plt.savefig(f'results/perturbed_instances_20pct/instance_{instance_id}_predictions.png')
     plt.close()
 
 def main():

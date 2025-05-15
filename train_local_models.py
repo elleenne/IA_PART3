@@ -39,8 +39,8 @@ class LinearRegression:
 
 def load_perturbed_data(instance_id):
     """Load perturbed instances and their predictions for a given instance."""
-    perturbed_path = f'results/perturbed_instances/instance_{instance_id}_perturbed.csv'
-    predictions_path = f'results/perturbed_instances/instance_{instance_id}_predictions.csv'
+    perturbed_path = f'results/perturbed_instances_20pct/instance_{instance_id}_perturbed.csv'
+    predictions_path = f'results/perturbed_instances_20pct/instance_{instance_id}_predictions.csv'
     
     X = pd.read_csv(perturbed_path).values
     y = pd.read_csv(predictions_path).values
@@ -101,18 +101,23 @@ def visualize_predictions(instance_id, y_true, y_pred):
     plt.ylabel('Predicted Probability')
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f'results/local_models/instance_{instance_id}_predictions.png')
+    output_dir = 'results/local_models_20pct'
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(f'results/local_models_20pct/instance_{instance_id}_predictions.png')
     plt.close()
 
 def visualize_contributions_comparison(instance_id, models, features, true_class, predicted_class, correct):
     """Create a comparative visualization of feature contributions."""
     plt.figure(figsize=(15, 5))
     
+
+    subplot_colors = ['blue', 'orange', 'green', 'red', 'purple', 'brown']
+
     # Plot contributions for each class
     for class_idx, model in enumerate(models):
         plt.subplot(1, 3, class_idx + 1)
         weights = np.abs(model.weights)  # Use absolute values for contribution
-        plt.bar(features, weights)
+        plt.bar(features, weights, color=subplot_colors[class_idx % len(subplot_colors)])
         plt.title(f'Class {class_idx} Contributions')
         plt.xlabel('Features')
         plt.ylabel('Absolute Weight')
@@ -121,8 +126,14 @@ def visualize_contributions_comparison(instance_id, models, features, true_class
     
     plt.suptitle(f'Instance {instance_id} - True: {true_class}, Predicted: {predicted_class}, Correct: {correct}')
     plt.tight_layout()
-    plt.savefig(f'results/local_models/instance_{instance_id}_contributions_comparison.png')
+    output_dir = 'results/local_models_20pct'
+    os.makedirs(output_dir, exist_ok=True)
+
+    plt.savefig(f'{output_dir}/instance_{instance_id}_contributions_comparison.png')
+
     plt.close()
+
+
 
 def main():
     # Create directory for results
